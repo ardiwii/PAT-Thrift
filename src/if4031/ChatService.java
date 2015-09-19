@@ -39,13 +39,13 @@ public class ChatService {
 
   public interface Iface {
 
-    public void send(String nick, String message, String channel) throws org.apache.thrift.TException;
+    public boolean send(String nick, String message, String channel) throws org.apache.thrift.TException;
 
     public String recv(String nic) throws org.apache.thrift.TException;
 
-    public void joinChannel(String nick, String channel) throws org.apache.thrift.TException;
+    public boolean joinChannel(String nick, String channel) throws org.apache.thrift.TException;
 
-    public void leaveChannel(String nick, String channel) throws org.apache.thrift.TException;
+    public boolean leaveChannel(String nick, String channel) throws org.apache.thrift.TException;
 
   }
 
@@ -81,10 +81,10 @@ public class ChatService {
       super(iprot, oprot);
     }
 
-    public void send(String nick, String message, String channel) throws org.apache.thrift.TException
+    public boolean send(String nick, String message, String channel) throws org.apache.thrift.TException
     {
       send_send(nick, message, channel);
-      recv_send();
+      return recv_send();
     }
 
     public void send_send(String nick, String message, String channel) throws org.apache.thrift.TException
@@ -96,11 +96,14 @@ public class ChatService {
       sendBase("send", args);
     }
 
-    public void recv_send() throws org.apache.thrift.TException
+    public boolean recv_send() throws org.apache.thrift.TException
     {
       send_result result = new send_result();
       receiveBase(result, "send");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "send failed: unknown result");
     }
 
     public String recv(String nic) throws org.apache.thrift.TException
@@ -126,10 +129,10 @@ public class ChatService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "recv failed: unknown result");
     }
 
-    public void joinChannel(String nick, String channel) throws org.apache.thrift.TException
+    public boolean joinChannel(String nick, String channel) throws org.apache.thrift.TException
     {
       send_joinChannel(nick, channel);
-      recv_joinChannel();
+      return recv_joinChannel();
     }
 
     public void send_joinChannel(String nick, String channel) throws org.apache.thrift.TException
@@ -140,17 +143,20 @@ public class ChatService {
       sendBase("joinChannel", args);
     }
 
-    public void recv_joinChannel() throws org.apache.thrift.TException
+    public boolean recv_joinChannel() throws org.apache.thrift.TException
     {
       joinChannel_result result = new joinChannel_result();
       receiveBase(result, "joinChannel");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "joinChannel failed: unknown result");
     }
 
-    public void leaveChannel(String nick, String channel) throws org.apache.thrift.TException
+    public boolean leaveChannel(String nick, String channel) throws org.apache.thrift.TException
     {
       send_leaveChannel(nick, channel);
-      recv_leaveChannel();
+      return recv_leaveChannel();
     }
 
     public void send_leaveChannel(String nick, String channel) throws org.apache.thrift.TException
@@ -161,11 +167,14 @@ public class ChatService {
       sendBase("leaveChannel", args);
     }
 
-    public void recv_leaveChannel() throws org.apache.thrift.TException
+    public boolean recv_leaveChannel() throws org.apache.thrift.TException
     {
       leaveChannel_result result = new leaveChannel_result();
       receiveBase(result, "leaveChannel");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "leaveChannel failed: unknown result");
     }
 
   }
@@ -214,13 +223,13 @@ public class ChatService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws org.apache.thrift.TException {
+      public boolean getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_send();
+        return (new Client(prot)).recv_send();
       }
     }
 
@@ -281,13 +290,13 @@ public class ChatService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws org.apache.thrift.TException {
+      public boolean getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_joinChannel();
+        return (new Client(prot)).recv_joinChannel();
       }
     }
 
@@ -316,13 +325,13 @@ public class ChatService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws org.apache.thrift.TException {
+      public boolean getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_leaveChannel();
+        return (new Client(prot)).recv_leaveChannel();
       }
     }
 
@@ -361,7 +370,8 @@ public class ChatService {
 
       public send_result getResult(I iface, send_args args) throws org.apache.thrift.TException {
         send_result result = new send_result();
-        iface.send(args.nick, args.message, args.channel);
+        result.success = iface.send(args.nick, args.message, args.channel);
+        result.setSuccessIsSet(true);
         return result;
       }
     }
@@ -401,7 +411,8 @@ public class ChatService {
 
       public joinChannel_result getResult(I iface, joinChannel_args args) throws org.apache.thrift.TException {
         joinChannel_result result = new joinChannel_result();
-        iface.joinChannel(args.nick, args.channel);
+        result.success = iface.joinChannel(args.nick, args.channel);
+        result.setSuccessIsSet(true);
         return result;
       }
     }
@@ -421,7 +432,8 @@ public class ChatService {
 
       public leaveChannel_result getResult(I iface, leaveChannel_args args) throws org.apache.thrift.TException {
         leaveChannel_result result = new leaveChannel_result();
-        iface.leaveChannel(args.nick, args.channel);
+        result.success = iface.leaveChannel(args.nick, args.channel);
+        result.setSuccessIsSet(true);
         return result;
       }
     }
@@ -446,7 +458,7 @@ public class ChatService {
       return processMap;
     }
 
-    public static class send<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, send_args, Void> {
+    public static class send<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, send_args, Boolean> {
       public send() {
         super("send");
       }
@@ -455,11 +467,13 @@ public class ChatService {
         return new send_args();
       }
 
-      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new AsyncMethodCallback<Boolean>() { 
+          public void onComplete(Boolean o) {
             send_result result = new send_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -491,7 +505,7 @@ public class ChatService {
         return false;
       }
 
-      public void start(I iface, send_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+      public void start(I iface, send_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
         iface.send(args.nick, args.message, args.channel,resultHandler);
       }
     }
@@ -547,7 +561,7 @@ public class ChatService {
       }
     }
 
-    public static class joinChannel<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinChannel_args, Void> {
+    public static class joinChannel<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinChannel_args, Boolean> {
       public joinChannel() {
         super("joinChannel");
       }
@@ -556,11 +570,13 @@ public class ChatService {
         return new joinChannel_args();
       }
 
-      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new AsyncMethodCallback<Boolean>() { 
+          public void onComplete(Boolean o) {
             joinChannel_result result = new joinChannel_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -592,12 +608,12 @@ public class ChatService {
         return false;
       }
 
-      public void start(I iface, joinChannel_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+      public void start(I iface, joinChannel_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
         iface.joinChannel(args.nick, args.channel,resultHandler);
       }
     }
 
-    public static class leaveChannel<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, leaveChannel_args, Void> {
+    public static class leaveChannel<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, leaveChannel_args, Boolean> {
       public leaveChannel() {
         super("leaveChannel");
       }
@@ -606,11 +622,13 @@ public class ChatService {
         return new leaveChannel_args();
       }
 
-      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new AsyncMethodCallback<Boolean>() { 
+          public void onComplete(Boolean o) {
             leaveChannel_result result = new leaveChannel_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -642,7 +660,7 @@ public class ChatService {
         return false;
       }
 
-      public void start(I iface, leaveChannel_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+      public void start(I iface, leaveChannel_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
         iface.leaveChannel(args.nick, args.channel,resultHandler);
       }
     }
@@ -1223,6 +1241,7 @@ public class ChatService {
   public static class send_result implements org.apache.thrift.TBase<send_result, send_result._Fields>, java.io.Serializable, Cloneable, Comparable<send_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("send_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1230,10 +1249,11 @@ public class ChatService {
       schemes.put(TupleScheme.class, new send_resultTupleSchemeFactory());
     }
 
+    public boolean success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1248,6 +1268,8 @@ public class ChatService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -1286,9 +1308,15 @@ public class ChatService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(send_result.class, metaDataMap);
     }
@@ -1296,10 +1324,20 @@ public class ChatService {
     public send_result() {
     }
 
+    public send_result(
+      boolean success)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public send_result(send_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
     }
 
     public send_result deepCopy() {
@@ -1308,15 +1346,51 @@ public class ChatService {
 
     @Override
     public void clear() {
+      setSuccessIsSet(false);
+      this.success = false;
+    }
+
+    public boolean isSuccess() {
+      return this.success;
+    }
+
+    public send_result setSuccess(boolean success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Boolean)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return Boolean.valueOf(isSuccess());
+
       }
       throw new IllegalStateException();
     }
@@ -1328,6 +1402,8 @@ public class ChatService {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -1345,12 +1421,26 @@ public class ChatService {
       if (that == null)
         return false;
 
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true;
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
 
       return list.hashCode();
     }
@@ -1363,6 +1453,16 @@ public class ChatService {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -1383,6 +1483,9 @@ public class ChatService {
       StringBuilder sb = new StringBuilder("send_result(");
       boolean first = true;
 
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1402,6 +1505,8 @@ public class ChatService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -1426,6 +1531,14 @@ public class ChatService {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.success = iprot.readBool();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1441,6 +1554,11 @@ public class ChatService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeBool(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1458,11 +1576,24 @@ public class ChatService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, send_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeBool(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, send_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readBool();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
@@ -2659,6 +2790,7 @@ public class ChatService {
   public static class joinChannel_result implements org.apache.thrift.TBase<joinChannel_result, joinChannel_result._Fields>, java.io.Serializable, Cloneable, Comparable<joinChannel_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinChannel_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -2666,10 +2798,11 @@ public class ChatService {
       schemes.put(TupleScheme.class, new joinChannel_resultTupleSchemeFactory());
     }
 
+    public boolean success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -2684,6 +2817,8 @@ public class ChatService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -2722,9 +2857,15 @@ public class ChatService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinChannel_result.class, metaDataMap);
     }
@@ -2732,10 +2873,20 @@ public class ChatService {
     public joinChannel_result() {
     }
 
+    public joinChannel_result(
+      boolean success)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public joinChannel_result(joinChannel_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
     }
 
     public joinChannel_result deepCopy() {
@@ -2744,15 +2895,51 @@ public class ChatService {
 
     @Override
     public void clear() {
+      setSuccessIsSet(false);
+      this.success = false;
+    }
+
+    public boolean isSuccess() {
+      return this.success;
+    }
+
+    public joinChannel_result setSuccess(boolean success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Boolean)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return Boolean.valueOf(isSuccess());
+
       }
       throw new IllegalStateException();
     }
@@ -2764,6 +2951,8 @@ public class ChatService {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -2781,12 +2970,26 @@ public class ChatService {
       if (that == null)
         return false;
 
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true;
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
 
       return list.hashCode();
     }
@@ -2799,6 +3002,16 @@ public class ChatService {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -2819,6 +3032,9 @@ public class ChatService {
       StringBuilder sb = new StringBuilder("joinChannel_result(");
       boolean first = true;
 
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -2838,6 +3054,8 @@ public class ChatService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -2862,6 +3080,14 @@ public class ChatService {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.success = iprot.readBool();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2877,6 +3103,11 @@ public class ChatService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeBool(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2894,11 +3125,24 @@ public class ChatService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, joinChannel_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeBool(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, joinChannel_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readBool();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
@@ -3373,6 +3617,7 @@ public class ChatService {
   public static class leaveChannel_result implements org.apache.thrift.TBase<leaveChannel_result, leaveChannel_result._Fields>, java.io.Serializable, Cloneable, Comparable<leaveChannel_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("leaveChannel_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -3380,10 +3625,11 @@ public class ChatService {
       schemes.put(TupleScheme.class, new leaveChannel_resultTupleSchemeFactory());
     }
 
+    public boolean success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -3398,6 +3644,8 @@ public class ChatService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -3436,9 +3684,15 @@ public class ChatService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(leaveChannel_result.class, metaDataMap);
     }
@@ -3446,10 +3700,20 @@ public class ChatService {
     public leaveChannel_result() {
     }
 
+    public leaveChannel_result(
+      boolean success)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public leaveChannel_result(leaveChannel_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
     }
 
     public leaveChannel_result deepCopy() {
@@ -3458,15 +3722,51 @@ public class ChatService {
 
     @Override
     public void clear() {
+      setSuccessIsSet(false);
+      this.success = false;
+    }
+
+    public boolean isSuccess() {
+      return this.success;
+    }
+
+    public leaveChannel_result setSuccess(boolean success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Boolean)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return Boolean.valueOf(isSuccess());
+
       }
       throw new IllegalStateException();
     }
@@ -3478,6 +3778,8 @@ public class ChatService {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -3495,12 +3797,26 @@ public class ChatService {
       if (that == null)
         return false;
 
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true;
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
 
       return list.hashCode();
     }
@@ -3513,6 +3829,16 @@ public class ChatService {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3533,6 +3859,9 @@ public class ChatService {
       StringBuilder sb = new StringBuilder("leaveChannel_result(");
       boolean first = true;
 
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3552,6 +3881,8 @@ public class ChatService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -3576,6 +3907,14 @@ public class ChatService {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.success = iprot.readBool();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3591,6 +3930,11 @@ public class ChatService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeBool(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3608,11 +3952,24 @@ public class ChatService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, leaveChannel_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeBool(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, leaveChannel_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readBool();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
