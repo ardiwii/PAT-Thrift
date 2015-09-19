@@ -38,7 +38,7 @@ public class ListChannel {
         boolean found = false;
         
         for(int i=0 ; i<listChannel.size() && !found; i++){
-            if(listChannel.get(i).getChannelName() == channelName){
+            if(listChannel.get(i).getChannelName().equals(channelName) && listChannel.get(i).isContainNick(nickname)){
                 listChannel.get(i).addMessage(message);
                 found = true;
             }
@@ -71,7 +71,7 @@ public class ListChannel {
         boolean found = false;
         
         for(int i=0 ; i<listChannel.size() && !found; i++){
-            if(listChannel.get(i).getChannelName() == channelName){
+            if(listChannel.get(i).getChannelName().equals(channelName) ){
                 listChannel.get(i).addUser(nickname);
                 found = true;
                 
