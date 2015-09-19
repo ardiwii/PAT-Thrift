@@ -45,7 +45,7 @@ public class ChatHandler implements ChatService.Iface {
 
     @Override
     public int leaveChannel(String nick, String channel) throws TException {
-         return 1;
+        return listChannel.leaveChannel(nick, channel);
     }
 	
 }

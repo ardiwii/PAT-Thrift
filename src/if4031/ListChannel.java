@@ -82,6 +82,20 @@ public class ListChannel {
         
     }
     
+    public int leaveChannel(String nickname, String channelName){
+        int idx = indexOfChannel(channelName);
+        if(idx!=-1){
+            if(listChannel.get(idx).removeUser(nickname)){
+                return 1;
+            }
+            else{
+                return 2; //user not in the channel
+            }
+        }
+        else{
+            return 3; //channel not found;
+        }
+    }
     
     private void addChannel(String channelName){
         Channel channel = new Channel(channelName);
@@ -96,5 +110,17 @@ public class ListChannel {
             }
         }
         return found;
+    }
+    
+    private int indexOfChannel(String channelName){
+        boolean found = false;
+        int channel_idx = -1;
+        for(int i=0 ; i<listChannel.size() && !found; i++){
+            if(listChannel.get(i).getChannelName().equals(channelName)){
+                found = true;
+                channel_idx = i;
+            }
+        }
+        return channel_idx;
     }
 }

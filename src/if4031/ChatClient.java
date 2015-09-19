@@ -36,26 +36,58 @@ private static void perform(ChatService.Client client) throws TException
                 parsed_msg = input.split(" ");
                    
                 if(input.startsWith("/NICK")){
-                    nickname = parsed_msg[1];
-                }
-                else if(input.startsWith("/JOIN")){
-                    System.out.println("joining channel: " + parsed_msg[1]);
-                    response_code = client.joinChannel(nickname, parsed_msg[1]);
-                    if(response_code==1){
-                        System.out.println("success, you are connected to channel " + parsed_msg[1]);
-                    }
-                    else if(response_code==2){
-                        System.out.println("you have joined that channel");
-                    }
-                    else if(response_code==-1){
-                        System.out.println("no response");
+                    if(parsed_msg.length>1){
+                        nickname = parsed_msg[1];
                     }
                     else{
-                        System.out.println("unknown error");
+                        System.out.println("no nickname specified, to change nickname, type \"/NICK <new_nickname>\" ");
                     }
                 }
+                else if(input.startsWith("/JOIN")){
+                    if(parsed_msg.length>1){
+                        System.out.println("joining channel: " + parsed_msg[1]);
+                        response_code = client.joinChannel(nickname, parsed_msg[1]);
+                        if(response_code==1){
+                            System.out.println("success, you are connected to channel " + parsed_msg[1]);
+                        }
+                        else if(response_code==2){
+                            System.out.println("you have joined that channel");
+                        }
+                        else if(response_code==-1){
+                            System.out.println("no response");
+                        }
+                        else{
+                            System.out.println("unknown error");
+                        }
+                    }
+                    else{
+                        System.out.println("no channel name specified, to join channel, type \"/JOIN <channel_name>\" ");
+                    }
+                    
+                }
                 else if(input.startsWith("/LEAVE")){
-                    //TODO : implement leave channel
+                    if(parsed_msg.length>1){
+                       response_code = client.leaveChannel(nickname, parsed_msg[1]);
+                        if(response_code==1){
+                            System.out.println("success, you have left channel " + parsed_msg[1]);
+                        }
+                        else if(response_code==2){
+                            System.out.println("you are not in that channel");
+                        }
+                        else if(response_code==3){
+                            System.out.println("channel not found");
+                        }
+                        else if(response_code==-1){
+                            System.out.println("no response");
+                        }
+                        else{
+                            System.out.println("unknown error");
+                        }
+                    }
+                    else{
+                        System.out.println("no channel name specified, to leave a channel, type \"/LEAVE <channel_name>\" ");
+                    }
+                    
                 }
                 else if(input.startsWith("@")){
                     input = input.substring(input.indexOf(" "));
