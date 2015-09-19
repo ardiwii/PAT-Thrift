@@ -12,7 +12,7 @@ public class ChatHandler implements ChatService.Iface {
     @Override
     public int send(String nick, String message, String channelName) throws TException {
         String n = "";
-        boolean succ = false;
+        boolean succ = true;
         if(!channelName.equals(n)){
             succ = listChannel.addMessageToChannel(nick, message, channelName);
         }
