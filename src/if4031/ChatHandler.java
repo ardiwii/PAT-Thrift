@@ -10,7 +10,7 @@ public class ChatHandler implements ChatService.Iface {
     private ListChannel listChannel = new ListChannel();
     
     @Override
-    public boolean send(String nick, String message, String channelName) throws TException {
+    public int send(String nick, String message, String channelName) throws TException {
         String n = "";
         if(!channelName.equals(n)){
             listChannel.addMessageToChannel(nick, message, channelName);
@@ -18,7 +18,7 @@ public class ChatHandler implements ChatService.Iface {
         else{
             listChannel.addMessage(nick, message);
         }
-        return true;
+        return 1;
     }
 
     @Override
@@ -27,14 +27,14 @@ public class ChatHandler implements ChatService.Iface {
     }
 
     @Override
-    public boolean joinChannel(String nick, String channel) throws TException {
+    public int joinChannel(String nick, String channel) throws TException {
         listChannel.joinChannel(nick, channel);
-        return true;
+        return 1;
     }
 
     @Override
-    public boolean leaveChannel(String nick, String channel) throws TException {
-         return true;
+    public int leaveChannel(String nick, String channel) throws TException {
+         return 1;
     }
 	
 }
