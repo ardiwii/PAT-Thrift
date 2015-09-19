@@ -50,7 +50,7 @@ public class ListChannel {
         List <String> ret = new ArrayList();
         for(int i = 0 ; i<listChannel.size();i++){
             if(listChannel.get(i).isContainNick(nickname)){
-                List <Message> message = listChannel.get(i).getallMessage();
+                List <Message> message = listChannel.get(i).getMessageFrom(nickname);
                 for(int j=0 ;j<message.size();j++){
                     String temp = "["+listChannel.get(i).getChannelName()+"]("+message.get(j).nick+")"+message.get(j).message;
                     ret.add(temp);

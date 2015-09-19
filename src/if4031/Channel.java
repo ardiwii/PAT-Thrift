@@ -57,8 +57,30 @@ public class Channel {
         return listMessage;
     }
     
+    public List getMessageFrom(String nickname){
+        List<Message> ret = new ArrayList();
+        int lastMessage = 0;
+        
+        boolean found = false;
+        
+        for(int i=0 ; i<listUser.size() && !found; i++){
+            if(listUser.get(i).nickname.equals(nickname)){
+                found = true;
+                lastMessage = listUser.get(i).lastMessage;
+                listUser.get(i).lastMessage = listMessage.size() - 1;
+            }
+        }
+        
+        for(int i=lastMessage; i < listMessage.size();i++){
+            ret.add(listMessage.get(i));
+        }
+        return ret;
+    }
+    
     public void addUser(String nickname){
         User user = new User(nickname);
         listUser.add(user);
     }
+    
+    
 }
