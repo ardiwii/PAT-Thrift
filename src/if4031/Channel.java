@@ -45,6 +45,18 @@ public class Channel {
         return found;
     }
     
+    public boolean removeUser(String nick){
+        boolean found = false;
+        
+        for(int i=0 ; i<listUser.size() && !found; i++){
+            if(listUser.get(i).nickname.equals(nick)){
+                listUser.remove(i);
+                found = true;
+            }
+        }
+        return found;
+    }
+    
     public void addMessage(Message message){
         listMessage.add(message);
     }
