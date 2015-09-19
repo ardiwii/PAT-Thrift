@@ -72,7 +72,7 @@ public class ListChannel {
         boolean found = false;
         
         for(int i=0 ; i<listChannel.size() && !found; i++){
-            if(listChannel.get(i).getChannelName().equals(channelName) && listChannel.get(i).isContainNick(nickname)){
+            if(listChannel.get(i).getChannelName().equals(channelName) && !listChannel.get(i).isContainNick(nickname)){
                 listChannel.get(i).addUser(nickname);
                 found = true;
                 
