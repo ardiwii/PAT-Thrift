@@ -34,8 +34,13 @@ public class ChatHandler implements ChatService.Iface {
 
     @Override
     public int joinChannel(String nick, String channel) throws TException {
-        listChannel.joinChannel(nick, channel);
-        return 1;
+        boolean succ = listChannel.joinChannel(nick, channel);
+        if(succ){
+            return 1;
+        }
+        else{
+            return 2;
+        }
     }
 
     @Override
