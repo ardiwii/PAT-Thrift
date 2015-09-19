@@ -31,7 +31,7 @@ public class ListChannel {
      }
     
     
-    public void addMessageToChannel(String nickname ,String messageText ,String channelName){
+    public boolean addMessageToChannel(String nickname ,String messageText ,String channelName){
         
         Message message = new Message(nickname,messageText);
         
@@ -43,6 +43,7 @@ public class ListChannel {
                 found = true;
             }
         }
+        return found;
     }
     
     public String getMessage(String nickname){
