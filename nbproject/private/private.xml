@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/if4031/CalculatorService.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>6</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/User.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/Message.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/CalculatorServer.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/ChatServer.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/pat/thrift/PATThrift.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/ChatClient.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/CalculatorClient.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/ListChannel.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/Channel.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/ChatService.java</file>
+            <file>file:/D:/Kuliah/Informatika/semester%207/PAT/tugas2/thrift/src/if4031/ChatHandler.java</file>
+        </group>
+    </open-files>
+</project-private>
