@@ -1,13 +1,21 @@
 package if4031;
 
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
+
 public class ChatClient {
+    
+    //private static String nickname = "";
+    
 	public static void main(String [] args) {
 		try {
 			TTransport transport;
@@ -22,13 +30,24 @@ public class ChatClient {
 		}
 	}
 
+//static Runnable getMessageRunnable = new Runnable() {
+//    @Override
+//    public void run() {
+//        System.out.println(client.recv(nickname));
+//    }
+//};
+        
 private static void perform(ChatService.Client client) throws TException
 	{
-            String nickname = "<unnamed>";
+            Random random = new Random();
+            String nickname = "user_" + random.nextInt(10000);
             String input = "";
             String[] parsed_msg;
             Scanner scanner = new Scanner(System.in);
             int response_code = -1;
+            
+//            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//            executor.scheduleAtFixedRate(getMessageRunnable, 0, 3, TimeUnit.SECONDS);
             
             while(!input.equalsIgnoreCase("/exit")){
                 System.out.print(nickname + ">>");
