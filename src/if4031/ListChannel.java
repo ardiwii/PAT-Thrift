@@ -91,7 +91,7 @@ public class ListChannel {
     private boolean isChannelExist(String channelName){
         boolean found = false;
         for(int i=0 ; i<listChannel.size() && !found; i++){
-            if(listChannel.get(i).getChannelName() == channelName){
+            if(listChannel.get(i).getChannelName().equals(channelName)){
                 found = true;
             }
         }
