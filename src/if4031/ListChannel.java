@@ -61,6 +61,8 @@ public class ListChannel {
         for(int i = 0 ; i < ret.size() ; i++){
             retString += ret.get(i) + "\n";
         }
+        
+        //System.out.println(retString);
         return retString;
     }
     
