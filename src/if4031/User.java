@@ -23,4 +23,9 @@ public class User {
         nickname = _nickname;
         lastMessage = 0;
     }
+    
+    public User(String _nickname,int _lastMessage){
+        nickname = _nickname;
+        lastMessage = _lastMessage;
+    }
 }

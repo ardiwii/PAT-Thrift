@@ -79,7 +79,8 @@ public class Channel {
             if(listUser.get(i).nickname.equals(nickname)){
                 found = true;
                 lastMessage = listUser.get(i).lastMessage;
-                listUser.get(i).lastMessage = listMessage.size() - 1;
+                User temp = new User(listUser.get(i).nickname,listMessage.size()-1);
+                listUser.set(i, temp);
             }
         }
         
